@@ -1,7 +1,6 @@
 version: "2.1"
 
 services:
-
   activemq:
     image: webcenter/activemq:5.14.3
     networks:
@@ -54,7 +53,6 @@ services:
 
 networks:
   jms_network:
-  jms_jms_network:
 
 volumes:
   activemq-data: {}
