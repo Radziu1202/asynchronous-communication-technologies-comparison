@@ -1,6 +1,8 @@
 package app.publisher;
 
 import app.model.Employee;
+import org.example.model.Order;
+import org.example.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.jms.Session;
 import javax.jms.Topic;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -27,11 +31,15 @@ public class DataPublisher implements CommandLineRunner {
         try {
             Topic empTopic = Objects.requireNonNull(jmsTemplate.getConnectionFactory()).createConnection()
                     .createSession(false, Session.AUTO_ACKNOWLEDGE).createTopic("EmpTopic");
+            Product pr = new Product("test",Math.random() * 100);
+            List<Product> list= new ArrayList<Product>();
+            list.add(pr);
+            Order order = new Order((int) (Math.random()*100),list );
             for (int i = 0 ; i <20; i++) {
                 int empId = (int) (Math.random() * 50 + 1);
 
                 Employee emp = Employee.builder().id(empId).name("employeeNAME").role("employeeROLE").build();
-                jmsTemplate.convertAndSend(empTopic, emp);
+                jmsTemplate.convertAndSend(empTopic, order.toString());
             }
         } catch (Exception exception) {
             throw exception;

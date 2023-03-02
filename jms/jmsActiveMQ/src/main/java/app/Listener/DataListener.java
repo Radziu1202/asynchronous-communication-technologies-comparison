@@ -2,6 +2,7 @@ package app.Listener;
 
 import lombok.extern.slf4j.Slf4j;
 import app.model.Employee;
+import org.example.model.Order;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
@@ -9,12 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataListener {
     @JmsListener(destination = "${emp.jms.topic}", containerFactory = "empJmsContFactory")
-    public void getEmployeeListener1(Employee emp) {
-        log.info("Employee listener1: " + emp);
+    public void getListener1(String ord) {
+        log.info("Order listener1: " + ord);
     }
 
     @JmsListener(destination = "${emp.jms.topic}", containerFactory = "empJmsContFactory")
-    public void getEmployeeListener2(Employee emp) {
-        log.info("Employee Listener2: " + emp);
+    public void getListener2(String ord) {
+        log.info("Order Listener2: " + ord);
     }
 }

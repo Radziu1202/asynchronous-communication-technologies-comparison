@@ -2,12 +2,16 @@ version: '2'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
+    networks:
+      - kafka_network
     ports:
       - "2181:2181"
   kafka:
     image: wurstmeister/kafka
     ports:
       - "9092:9092"
+    networks:
+      - kafka_network
     depends_on:
       - zookeeper
     environment:
@@ -19,6 +23,8 @@ services:
     image: kafkaapp
     ports:
       - "8080:8080"
+    networks:
+      - kafka_network
     depends_on:
       - kafka
       - producer
@@ -31,11 +37,13 @@ services:
     image: kafkaproducer
     ports:
       - "8081:8081"
+    networks:
+      - kafka_network
     depends_on:
       - kafka
     environment:
       SPRING_KAFKA_CONSUMER_BOOTSTRAP-SERVERS: kafka:9092
     links:
       - kafka:kafka
-
-
+networks:
+  kafka_network:
