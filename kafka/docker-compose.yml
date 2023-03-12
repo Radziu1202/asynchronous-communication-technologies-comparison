@@ -1,49 +1,46 @@
-version: '2'
+version: '3.4'
 services:
   zookeeper:
-    image: wurstmeister/zookeeper
-    networks:
-      - kafka_network
-    ports:
-      - "2181:2181"
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_TICK_TIME: 2000
+
   kafka:
-    image: wurstmeister/kafka
+    image: confluentinc/cp-kafka:latest
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     ports:
-      - "9092:9092"
-    networks:
-      - kafka_network
+      - "29092:29092"
     depends_on:
       - zookeeper
-    environment:
-      KAFKA_ADVERTISED_HOST_NAME: kafka
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-  consumer:
-    image: kafkaapp
-    ports:
-      - "8080:8080"
-    networks:
-      - kafka_network
-    depends_on:
-      - kafka
-      - producer
-    environment:
-      SPRING_KAFKA_CONSUMER_BOOTSTRAP-SERVERS: kafka:9092
-    links:
-      - kafka:kafka
 
-  producer:
-    image: kafkaproducer
+  influxdb:
+    image: influxdb
+    volumes:
+      - influxdb:/var/lib/influxdb
     ports:
-      - "8081:8081"
-    networks:
-      - kafka_network
-    depends_on:
-      - kafka
+      - "8086:8086"
+
+  chronograf:
+    image: chronograf
+    volumes:
+      - chronograf:/var/lib/chronograf
+    ports:
+      - "8888:8888"
     environment:
-      SPRING_KAFKA_CONSUMER_BOOTSTRAP-SERVERS: kafka:9092
-    links:
-      - kafka:kafka
-networks:
-  kafka_network:
+      INFLUXDB_HOST: influxdb
+      INFLUXDB_AUTH_TYPE: oauth2
+      INFLUXDB_URL: http://influxdb:8086
+      INFLUXDB_TOKEN: w8Q4vFkMfJ6VNzMk3Sn9Yqiqlj0gpidjkOR8_cbh869S2BwP33-Ew4i6mjqinRDGH1LF35ppfJwSRwKdXcKFdg==
+    command: --influxdb-url=http://influxdb:8086
+
+
+volumes:
+  influxdb:
+  grafana:
+  chronograf:

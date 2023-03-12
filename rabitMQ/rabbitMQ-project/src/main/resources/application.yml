@@ -1,0 +1,15 @@
+spring.rabbitmq:
+  host: rabbitmq
+  port: 5672
+  username: guest
+  password: guest
+management:
+  influx:
+    metrics:
+      export:
+        uri: http://localhost:8086
+        step: 10s
+        bucket: 524c9d5a0a89193f
+        org: kafkaorg
+        token: w8Q4vFkMfJ6VNzMk3Sn9Yqiqlj0gpidjkOR8_cbh869S2BwP33-Ew4i6mjqinRDGH1LF35ppfJwSRwKdXcKFdg==
+        api-version: v2

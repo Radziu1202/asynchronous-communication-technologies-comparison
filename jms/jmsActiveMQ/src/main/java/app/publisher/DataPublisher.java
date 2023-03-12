@@ -36,9 +36,6 @@ public class DataPublisher implements CommandLineRunner {
             list.add(pr);
             Order order = new Order((int) (Math.random()*100),list );
             for (int i = 0 ; i <20; i++) {
-                int empId = (int) (Math.random() * 50 + 1);
-
-                Employee emp = Employee.builder().id(empId).name("employeeNAME").role("employeeROLE").build();
                 jmsTemplate.convertAndSend(empTopic, order.toString());
             }
         } catch (Exception exception) {

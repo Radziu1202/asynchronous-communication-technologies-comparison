@@ -3,8 +3,6 @@ version: "2.1"
 services:
   activemq:
     image: webcenter/activemq:5.14.3
-    networks:
-      - jms_network
     ports:
       # mqtt
       - "1883:1883"
@@ -35,24 +33,43 @@ services:
       ACTIVEMQ_MIN_MEMORY: 512
       ACTIVEMQ_MAX_MEMORY: 2048
 
-  jmsapp:
-    image: jmsapp
-    container_name: 'jmsapp'
-    networks:
-      - jms_network
+
+  influxdb:
+    image: influxdb
+    volumes:
+      - influxdb:/var/lib/influxdb
+    ports:
+      - "8086:8086"
+
+  chronograf:
+      image: chronograf
+      volumes:
+        - chronograf:/var/lib/chronograf
+      ports:
+        - "8888:8888"
+      environment:
+        INFLUXDB_HOST: influxdb
+        INFLUXDB_AUTH_TYPE: oauth2
+        INFLUXDB_URL: http://influxdb:8086
+        INFLUXDB_TOKEN: IEhwjY2tZhV0Olvkk7TMcFbxMa_ZPfdf6yGCESJLa9-G2PItUYpWUPQnrmx5MNxxkNJwUT8di9GvMjnX7Kircg==
+      command: --influxdb-url=http://influxdb:8086
+  telegraf:
+    image: telegraf
+    container_name: telegraf
+    restart: always
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
     depends_on:
+      - influxdb
       - activemq
     links:
+      - influxdb
       - activemq
     ports:
-      - "8080"
-    environment:
-      - spring.activemq.broker-url=tcp://activemq:61616
-
-
-
-networks:
-  jms_network:
+      - '8125:8125'
 
 volumes:
+  influxdb:
+  grafana:
+  chronograf:
   activemq-data: {}

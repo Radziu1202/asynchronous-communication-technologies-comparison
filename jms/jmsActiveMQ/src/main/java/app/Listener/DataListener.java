@@ -13,9 +13,4 @@ public class DataListener {
     public void getListener1(String ord) {
         log.info("Order listener1: " + ord);
     }
-
-    @JmsListener(destination = "${emp.jms.topic}", containerFactory = "empJmsContFactory")
-    public void getListener2(String ord) {
-        log.info("Order Listener2: " + ord);
-    }
 }
