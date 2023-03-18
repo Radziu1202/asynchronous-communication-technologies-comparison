@@ -34,42 +34,42 @@ services:
       ACTIVEMQ_MAX_MEMORY: 2048
 
 
-  influxdb:
+  influxdb_jms:
     image: influxdb
     volumes:
-      - influxdb:/var/lib/influxdb
+      - influxdb_jms:/var/lib/influxdb_jms
     ports:
       - "8086:8086"
 
-  chronograf:
+  chronograf_jms:
       image: chronograf
       volumes:
-        - chronograf:/var/lib/chronograf
+        - chronograf_jms:/var/lib/chronograf_jms
       ports:
         - "8888:8888"
       environment:
-        INFLUXDB_HOST: influxdb
+        INFLUXDB_HOST: influxdb_jms
         INFLUXDB_AUTH_TYPE: oauth2
-        INFLUXDB_URL: http://influxdb:8086
-        INFLUXDB_TOKEN: IEhwjY2tZhV0Olvkk7TMcFbxMa_ZPfdf6yGCESJLa9-G2PItUYpWUPQnrmx5MNxxkNJwUT8di9GvMjnX7Kircg==
-      command: --influxdb-url=http://influxdb:8086
-  telegraf:
+        INFLUXDB_URL: http://influxdb_jms:8086
+        INFLUXDB_TOKEN: G9HeO9kvKQSI3S1EeQCDb1X9N3IFU6vFC9zKVGauLFadLepYAKE7VOZZFHt4F-NKkvVKYR3cMY89o48GTTtIiw==
+      command: --influxdb-url=http://influxdb_jms:8086
+  telegraf_jms:
     image: telegraf
-    container_name: telegraf
+    container_name: telegraf_jms
     restart: always
     volumes:
       - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
     depends_on:
-      - influxdb
+      - influxdb_jms
       - activemq
     links:
-      - influxdb
+      - influxdb_jms
       - activemq
     ports:
       - '8125:8125'
 
 volumes:
-  influxdb:
-  grafana:
-  chronograf:
+  influxdb_jms:
+  grafana_jms:
+  chronograf_jms:
   activemq-data: {}

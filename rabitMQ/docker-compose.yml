@@ -31,50 +31,50 @@ services:
       - spring_rabbitmq_username=guest
       - spring_rabbitmq_password=guest
 
-  influxdb:
+  influxdb_rabbit:
     image: influxdb
     volumes:
-      - influxdb:/var/lib/influxdb
+      - influxdb_rabbit:/var/lib/influxdb_rabbit
     networks:
       - rabbitmq_network
     ports:
       - "8086:8086"
 
-  chronograf:
+  chronograf_rabbit:
       image: chronograf
       volumes:
-        - chronograf:/var/lib/chronograf
+        - chronograf_rabbit:/var/lib/chronograf_rabbit
       ports:
         - "8888:8888"
       networks:
         - rabbitmq_network
       environment:
-        INFLUXDB_HOST: influxdb
+        INFLUXDB_HOST: influxdb_rabbit
         INFLUXDB_AUTH_TYPE: oauth2
-        INFLUXDB_URL: http://influxdb:8086
+        INFLUXDB_URL: http://influxdb_rabbit:8086
         INFLUXDB_TOKEN: 1_dvjkJb_oYeZpRS2l75xyAL6lk-gg_RdNSntmitYm4WfK9r8OFxn2TKjAQ_gG7zaKICQeBv2wR4oXoHjE02BA==
       command: --influxdb-url=http://influxdb:8086
-  telegraf:
+  telegraf_rabbit:
     image: telegraf
-    container_name: telegraf-rabbit
+    container_name: telegraf_rabbit
     restart: always
     volumes:
       - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
     networks:
       - rabbitmq_network
     depends_on:
-      - influxdb
+      - influxdb_rabbit
       - rabbitmq
     links:
-      - influxdb
+      - influxdb_rabbit
       - rabbitmq
     ports:
       - '8125:8125'
 
 volumes:
-    influxdb:
-    grafana:
-    chronograf:
+    influxdb_rabbit:
+    grafana_rabbit:
+    chronograf_rabbit:
 
 networks:
   rabbitmq_network:
