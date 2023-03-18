@@ -30,6 +30,52 @@ services:
       - spring_rabbitmq_port=5672
       - spring_rabbitmq_username=guest
       - spring_rabbitmq_password=guest
+
+  influxdb:
+    image: influxdb
+    volumes:
+      - influxdb:/var/lib/influxdb
+    networks:
+      - rabbitmq_network
+    ports:
+      - "8086:8086"
+
+  chronograf:
+      image: chronograf
+      volumes:
+        - chronograf:/var/lib/chronograf
+      ports:
+        - "8888:8888"
+      networks:
+        - rabbitmq_network
+      environment:
+        INFLUXDB_HOST: influxdb
+        INFLUXDB_AUTH_TYPE: oauth2
+        INFLUXDB_URL: http://influxdb:8086
+        INFLUXDB_TOKEN: 1_dvjkJb_oYeZpRS2l75xyAL6lk-gg_RdNSntmitYm4WfK9r8OFxn2TKjAQ_gG7zaKICQeBv2wR4oXoHjE02BA==
+      command: --influxdb-url=http://influxdb:8086
+  telegraf:
+    image: telegraf
+    container_name: telegraf-rabbit
+    restart: always
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    networks:
+      - rabbitmq_network
+    depends_on:
+      - influxdb
+      - rabbitmq
+    links:
+      - influxdb
+      - rabbitmq
+    ports:
+      - '8125:8125'
+
+volumes:
+    influxdb:
+    grafana:
+    chronograf:
+
 networks:
   rabbitmq_network:
 

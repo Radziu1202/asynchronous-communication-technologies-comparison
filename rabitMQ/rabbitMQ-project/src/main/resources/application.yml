@@ -9,7 +9,7 @@ management:
       export:
         uri: http://localhost:8086
         step: 10s
-        bucket: 524c9d5a0a89193f
-        org: kafkaorg
-        token: w8Q4vFkMfJ6VNzMk3Sn9Yqiqlj0gpidjkOR8_cbh869S2BwP33-Ew4i6mjqinRDGH1LF35ppfJwSRwKdXcKFdg==
+        bucket: 6b876e0b46330b27
+        org: rabbitorg
+        token: 1_dvjkJb_oYeZpRS2l75xyAL6lk-gg_RdNSntmitYm4WfK9r8OFxn2TKjAQ_gG7zaKICQeBv2wR4oXoHjE02BA==
         api-version: v2
