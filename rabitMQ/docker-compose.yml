@@ -52,7 +52,7 @@ services:
         INFLUXDB_HOST: influxdb_rabbit
         INFLUXDB_AUTH_TYPE: oauth2
         INFLUXDB_URL: http://influxdb_rabbit:8086
-        INFLUXDB_TOKEN: 1_dvjkJb_oYeZpRS2l75xyAL6lk-gg_RdNSntmitYm4WfK9r8OFxn2TKjAQ_gG7zaKICQeBv2wR4oXoHjE02BA==
+        INFLUXDB_TOKEN: Cl1VZlcsKHpnWvI2qDOMpCCMr8zDZL0D213LEgrgpOFF88NdYXVLhQyUscjLmPkFHx3GNgnKc-95n5MFkuXxfA==
       command: --influxdb-url=http://influxdb:8086
   telegraf_rabbit:
     image: telegraf

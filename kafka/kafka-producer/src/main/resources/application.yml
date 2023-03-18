@@ -17,7 +17,7 @@ management:
       export:
         uri: http://localhost:8086
         step: 10s
-        bucket: 524c9d5a0a89193f
+        bucket: kafka
         org: kafkaorg
-        token: w8Q4vFkMfJ6VNzMk3Sn9Yqiqlj0gpidjkOR8_cbh869S2BwP33-Ew4i6mjqinRDGH1LF35ppfJwSRwKdXcKFdg==
+        token: zDl_lLETvv34sT81VdW4pHj3Af8Jwy75X2o5EY0BEg4pduCMep5XFmFj6W2pi6yBL_zni59LRQgHLmi5qtawLA==
         api-version: v2
