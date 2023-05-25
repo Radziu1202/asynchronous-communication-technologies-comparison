@@ -1,48 +1,53 @@
 package com.kafka.producer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.admin.NewTopic;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
+
 import org.example.model.Order;
 import org.example.model.Product;
-import com.google.common.util.concurrent.RateLimiter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.SmartLifecycle;
-import org.springframework.context.annotation.Bean;
-import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
 
 @Component
 @Slf4j
 public class Producer implements SmartLifecycle {
+    private static final Logger logger = LoggerFactory.getLogger(Producer.class);
 
-    private final RateLimiter rateLimiter;
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
     private boolean running;
 
     @Autowired
     public Producer(KafkaTemplate<String,String> kafkaTemplate,
                     Properties properties) {
         this.kafkaTemplate = kafkaTemplate;
-        rateLimiter = RateLimiter.create(properties.rateLimit);
+    }
+
+    public void sendOrder(Order order) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String orderJson = objectMapper.writeValueAsString(order);
+
+            kafkaTemplate.send("order-topic", orderJson);
+        } catch (JsonProcessingException e) {
+            // Handle exception
+        }
     }
 
     private void run() {
-        while (running) {
-            rateLimiter.acquire();
+
             Order order = createOrder();
-            kafkaTemplate.send("topic1", order.toString());
-        }
+            sendOrder(order);
+
     }
 
 
@@ -91,8 +96,8 @@ public class Producer implements SmartLifecycle {
     @Component
     @ConfigurationProperties("app.producer")
     public static class Properties {
-        double rateLimit = 0.5;
     }
+
 }
 
 

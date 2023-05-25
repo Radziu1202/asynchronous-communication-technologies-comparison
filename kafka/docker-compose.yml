@@ -11,36 +11,10 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:32181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     ports:
-      - "29092:29092"
+      - "9092:9092"
     depends_on:
       - zookeeper
-
-  influxdb_kafka:
-    image: influxdb
-    volumes:
-      - influxdb_kafka:/var/lib/influxdb_kafka
-    ports:
-      - "8086:8086"
-
-  chronograf_kafka:
-    image: chronograf
-    volumes:
-      - chronograf_kafka:/var/lib/chronograf_kafka
-    ports:
-      - "8888:8888"
-    environment:
-      INFLUXDB_HOST: influxdb_kafka
-      INFLUXDB_AUTH_TYPE: oauth2
-      INFLUXDB_URL: http://influxdb_kafka:8086
-      INFLUXDB_TOKEN: zDl_lLETvv34sT81VdW4pHj3Af8Jwy75X2o5EY0BEg4pduCMep5XFmFj6W2pi6yBL_zni59LRQgHLmi5qtawLA==
-    command: --influxdb-url=http://influxdb_kafka:8086
-
-
-volumes:
-  influxdb_kafka:
-  grafana_kafka:
-  chronograf_kafka:

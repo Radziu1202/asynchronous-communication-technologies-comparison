@@ -1,0 +1,27 @@
+server:
+  port: 8082
+spring:
+  kafka:
+    consumer:
+      group-id: self-monitorer
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    bootstrap-servers: localhost:9092
+    producer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    properties:
+      metric.reporters: com.kafka.producer.KafkaSelfMetricReporter
+management:
+  influx:
+    metrics:
+      export:
+        uri: http://localhost:8086
+        step: 10s
+        bucket: mid_data_bucker
+        org: mid_data_org
+        token: hb8WQOBawFTuQVuh57qlgFJd73P6BM0C9nTpIwvEhCGx-FBbdJky3guM-3doZoOhxpWGr5-F7FYK_b4lHz38bA==
+        api-version: v2
+
+

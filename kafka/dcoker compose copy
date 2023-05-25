@@ -1,0 +1,50 @@
+version: '3.4'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:32181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "29092:29092"
+    depends_on:
+      - zookeeper
+    deploy:
+      resources:
+        limits:
+          memory: 24G
+
+  influxdb_kafka:
+    image: influxdb
+    volumes:
+      - influxdb_kafka:/var/lib/influxdb_kafka
+    ports:
+      - "8086:8086"
+
+  chronograf_kafka:
+    image: chronograf
+    volumes:
+      - chronograf_kafka:/var/lib/chronograf_kafka
+    ports:
+      - "8888:8888"
+    environment:
+      INFLUXDB_HOST: influxdb_kafka
+      INFLUXDB_AUTH_TYPE: oauth2
+      INFLUXDB_URL: http://influxdb_kafka:8086
+      INFLUXDB_TOKEN: zDl_lLETvv34sT81VdW4pHj3Af8Jwy75X2o5EY0BEg4pduCMep5XFmFj6W2pi6yBL_zni59LRQgHLmi5qtawLA==
+    command: --influxdb-url=http://influxdb_kafka:8086
+
+
+volumes:
+  influxdb_kafka:
+  grafana_kafka:
+  chronograf_kafka:

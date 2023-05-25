@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class Consumer {
 
 
-    @KafkaListener(id = "topic1", topics = "topic1")
+    @KafkaListener(id = "topic1", topics = "inbound")
     public void listen(String in) {
         System.out.println("AAAAAAAAAAAAAAAAAAA    "+in+"AAAAAAAAAAAAAAAAAAA    ");
     }

@@ -1,23 +1,25 @@
+server:
+  port: 8082
 spring:
+  artemis:
+    mode: native
+    host: localhost
+    port: 61616
+    user: admin
+    password: secret
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
   kafka:
+    bootstrap-servers: localhost:9092
     consumer:
       group-id: self-monitorer
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    bootstrap-servers: localhost:29092
     producer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    properties:
-      metric.reporters: com.kafka.producer.KafkaSelfMetricReporter
-management:
-  influx:
-    metrics:
-      export:
-        uri: http://localhost:8086
-        step: 10s
-        bucket: kafka
-        org: kafkaorg
-        token: zDl_lLETvv34sT81VdW4pHj3Af8Jwy75X2o5EY0BEg4pduCMep5XFmFj6W2pi6yBL_zni59LRQgHLmi5qtawLA==
-        api-version: v2
+

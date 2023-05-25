@@ -1,0 +1,17 @@
+spring.jms:
+  pub-sub-domain: true
+activemq.broker-url: tcp://localhost:61616
+emp.jms.topic: TopicJMS
+
+
+management:
+  influx:
+    metrics:
+      export:
+        uri: http://localhost:8086
+        step: 10s
+        bucket: activemq
+        org: mid_data_org
+        token: LA5V-1L1bZ3mcPQMZ5hgrztQ6mkh_ucjG6e8-rInn2yeilQyrQ28xiz4ONgwzX7SgNtWFB-ERMZNvz3JWzTQ2Q==
+        api-version: v2
+
